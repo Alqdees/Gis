@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="8dp"
+    android:elevation="8dp"
+    android:layout_marginBottom="8dp"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp"
+        >
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+
+        >
+        
+        <TextView
+            android:id="@+id/tvname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:text="Feeder_name and Trans. ID"/>
+
+
+    </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Feeder Name"/>
+            <TextView
+                android:id="@+id/tvfeedername"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="Feeder Name"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Substation Name"
+                android:textAlignment="center"/>
+            <TextView
+                android:id="@+id/tvsubname"
+                android:layout_width="200dp"
+                android:layout_height="35dp"
+                android:text="Substation Name"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Trans ID"/>
+            <TextView
+                android:id="@+id/tvtransid"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="Trans. ID"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="GPS"/>
+            <TextView
+                android:id="@+id/tvgps"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="GPS"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Trans. Capacity"
+                android:textAlignment="center"
+                />
+            <TextView
+                android:id="@+id/tvtranskva"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="Trans. Capacity"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Trans. Class"/>
+            <TextView
+                android:id="@+id/tvtransclass"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="Trans. Class"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Trans. Condition"
+                android:textAlignment="center"/>
+            <TextView
+                android:id="@+id/tvtranscondition"
+                android:layout_width="200dp"
+                android:layout_height="35dp"
+                android:text="Trans. Condition"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Trans. Manufacture"
+                android:textAlignment="center"/>
+            <TextView
+                android:id="@+id/tvtransmanufacture"
+                android:layout_width="200dp"
+                android:layout_height="35dp"
+                android:text="Trans. Manufacture"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Serial Number"/>
+            <TextView
+                android:id="@+id/tvserialnumber"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="Serial Number"/>
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Remarks"/>
+            <TextView
+                android:id="@+id/tvremark"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="Remarks"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardupdate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:cardBackgroundColor="#123A12"
+                app:cardCornerRadius="16dp">
+
+                <TextView
+                    android:id="@+id/update"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Update"
+                    android:textAlignment="center"
+                    android:textColor="#FFF"
+                    android:layout_margin="8dp"/>
+            </androidx.cardview.widget.CardView>
+            <View
+                android:layout_width="16dp"
+                android:layout_height="10dp"/>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/carddelete"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:cardBackgroundColor="#C80505"
+                app:cardCornerRadius="16dp">
+
+                <TextView
+                    android:id="@+id/delete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Delete"
+                    android:textAlignment="center"
+                    android:textColor="#FFF"
+                    android:layout_margin="8dp"/>
+
+
+            </androidx.cardview.widget.CardView>
+
+
+        </LinearLayout>
+
+
+        
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
