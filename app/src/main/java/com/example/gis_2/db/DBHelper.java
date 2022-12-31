@@ -5,20 +5,25 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.TextView;
+
 import com.example.gis_2.modle.Gis;
 import java.util.ArrayList;
 
 
 
 public class DBHelper extends SQLiteOpenHelper {
+
+
     public DBHelper( Context context) {
-        super(context, "gis.db", null, 1);
+        super(context, "gis.db", null, 4);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("CREATE TABLE tbl_gis (id INTEGER PRIMARY KEY AUTOINCREMENT, feedername TEXT, substationname TEXT, " +
-                "transID TEXT, gps TEXT, capacity TEXT, condition TEXT, class TEXT , manufacture TEXT , serialnumber TEXT, remark TEXT, date TEXT )");
+                "transID TEXT, gps TEXT, capacity TEXT, condition TEXT, class TEXT , manufacture TEXT , serialnumber TEXT, remark TEXT," +
+                " date TEXT, information TEXT )");
 
 
     }
@@ -41,12 +46,14 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("gps", g.getGps());
         cv.put("serialnumber", g.getSerialnumber());
         cv.put("remark", g.getRemark());
-        cv.put("date", g.getDate());
         cv.put("capacity", g.getCapacity());
+        cv.put("class", g.getClasses());
         cv.put("condition", g.getCondition());
         cv.put("manufacture", g.getManufacture());
         cv.put("date", g.getDate());
-//        capacity TEXT, condition TEXT, class TEXT , manufacture
+        cv.put("information", g.getInformation());
+
+        //        capacity TEXT, condition TEXT, class TEXT , manufacture
         return db.insert("tbl_gis", null, cv);
 
     }
@@ -65,18 +72,19 @@ public class DBHelper extends SQLiteOpenHelper {
                 String transID = cursor.getString(3);
                 String gps = cursor.getString(4);
                 String capacity = cursor.getString(5);
-                String condition = cursor.getString(6);
-                String classes = cursor.getString(7);
+                String classes = cursor.getString(6);
+                String condition = cursor.getString(7);
                 String manufacture = cursor.getString(8);
                 String serialnumber = cursor.getString(9);
                 String remark = cursor.getString(10);
                 String date = cursor.getString(11);
+                String information = cursor.getString(12);
+
 
 //        capacity TEXT, condition TEXT, class TEXT , manufacture
                 Giss.add(
-                        new Gis(id,
-                                feedername, substationname, transID, gps,capacity,condition,classes,manufacture,
-                                serialnumber, remark,date));
+                        new Gis(id, feedername, substationname, transID, gps,capacity,condition,classes,manufacture,
+                                serialnumber, remark,date, information));
             }while (cursor.moveToNext());
         }
         return Giss;
@@ -94,6 +102,11 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("gps", g.getGps());
         cv.put("serialnumber", g.getSerialnumber());
         cv.put("remark", g.getRemark());
+        cv.put("capacity", g.getCapacity());
+        cv.put("class", g.getClasses());
+        cv.put("condition", g.getCondition());
+        cv.put("manufacture", g.getManufacture());
+        cv.put("information", g.getInformation());
 
 
         return db.update("tbl_gis", cv, "id=?", new String[]{String.valueOf(g.getId())});

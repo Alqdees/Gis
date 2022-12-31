@@ -16,14 +16,14 @@ public class SplashActivity extends AppCompatActivity {
 
         getSupportActionBar().hide();
         iv = findViewById(R.id.iv);
-        iv.animate().rotation(360f).scaleX(1f).scaleY(1f).setDuration(2000);
+        iv.animate().rotation(360f).scaleX(1f).scaleY(1f).setDuration(2500);
 
         Thread t = new Thread(
                 new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            Thread.sleep(3000);
+                            Thread.sleep(4000);
                             startActivity(new Intent(SplashActivity.this, MainActivity.class));
                             finish();
                         } catch (InterruptedException e) {

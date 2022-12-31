@@ -64,11 +64,13 @@ public class GisAdapter extends RecyclerView.Adapter<GisAdapter.gisVH>{
         holder.tvtransmanufacture.setText(g.getManufacture());
         holder.tvserialnumber.setText(g.getSerialnumber());
         holder.tvremark.setText(g.getRemark());
+        holder.tvcource.setText(g.getInformation());
+
 
         holder.cardupdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, g.getFeedername() + " Will be Updated " , Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, g.getFeedername() + " _ " + g.getTransID() + " Will be Updated " , Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(context, UpdateGisActivity.class);
                 intent.putExtra("GIS", g);
@@ -111,9 +113,6 @@ public class GisAdapter extends RecyclerView.Adapter<GisAdapter.gisVH>{
             }
         });
 
-
-
-
     }
 
     @Override
@@ -123,7 +122,8 @@ public class GisAdapter extends RecyclerView.Adapter<GisAdapter.gisVH>{
 
     class gisVH extends RecyclerView.ViewHolder {
 
-        TextView tvname, tvfeedername, tvsubname, tvtransid, tvgps, tvtranskva, tvtransclass, tvtranscondition, tvtransmanufacture, tvserialnumber, tvremark;
+        TextView tvname, tvfeedername, tvsubname, tvtransid, tvgps, tvtranskva,
+                tvtransclass, tvtranscondition, tvtransmanufacture, tvserialnumber, tvremark, tvcource;
         CardView cardupdate, carddelete;
 
 
@@ -141,11 +141,9 @@ public class GisAdapter extends RecyclerView.Adapter<GisAdapter.gisVH>{
             tvtransmanufacture = v.findViewById(R.id.tvtransmanufacture);
             tvserialnumber = v.findViewById(R.id.tvserialnumber);
             tvremark = v.findViewById(R.id.tvremark);
-
+            tvcource = v.findViewById(R.id.tvcource);
             cardupdate = v.findViewById(R.id.cardupdate);
             carddelete = v.findViewById(R.id.carddelete);
-
-
         }
     }
 }

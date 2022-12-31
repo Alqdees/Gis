@@ -39,11 +39,13 @@
             android:padding="8dp">
 
             <TextView
-                android:layout_width="100dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
+                android:textAlignment="center"
                 android:text="Feeder Name"/>
             <TextView
                 android:id="@+id/tvfeedername"
+                android:textAlignment="center"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:text="Feeder Name"/>
@@ -56,14 +58,16 @@
             android:padding="8dp">
 
             <TextView
-                android:layout_width="100dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
+                android:textAlignment="center"
                 android:text="Substation Name"
-                android:textAlignment="center"/>
+                />
             <TextView
                 android:id="@+id/tvsubname"
+                android:textAlignment="center"
                 android:layout_width="200dp"
-                android:layout_height="35dp"
+                android:layout_height="wrap_content"
                 android:text="Substation Name"/>
 
         </LinearLayout>
@@ -74,11 +78,13 @@
             android:padding="8dp">
 
             <TextView
-                android:layout_width="100dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
+                android:textAlignment="center"
                 android:text="Trans ID"/>
             <TextView
                 android:id="@+id/tvtransid"
+                android:textAlignment="center"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:text="Trans. ID"/>
@@ -91,11 +97,13 @@
             android:padding="8dp">
 
             <TextView
-                android:layout_width="100dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
+                android:textAlignment="center"
                 android:text="GPS"/>
             <TextView
                 android:id="@+id/tvgps"
+                android:textAlignment="center"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:text="GPS"/>
@@ -108,13 +116,14 @@
             android:padding="8dp">
 
             <TextView
-                android:layout_width="100dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
-                android:text="Trans. Capacity"
                 android:textAlignment="center"
+                android:text="Trans. Capacity"
                 />
             <TextView
                 android:id="@+id/tvtranskva"
+                android:textAlignment="center"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:text="Trans. Capacity"/>
@@ -127,11 +136,13 @@
             android:padding="8dp">
 
             <TextView
-                android:layout_width="100dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
+                android:textAlignment="center"
                 android:text="Trans. Class"/>
             <TextView
                 android:id="@+id/tvtransclass"
+                android:textAlignment="center"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:text="Trans. Class"/>
@@ -144,14 +155,15 @@
             android:padding="8dp">
 
             <TextView
-                android:layout_width="100dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
-                android:text="Trans. Condition"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:text="Trans. Condition" />
             <TextView
                 android:id="@+id/tvtranscondition"
+                android:textAlignment="center"
                 android:layout_width="200dp"
-                android:layout_height="35dp"
+                android:layout_height="wrap_content"
                 android:text="Trans. Condition"
                 />
 
@@ -163,12 +175,13 @@
             android:padding="8dp">
 
             <TextView
-                android:layout_width="100dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
-                android:text="Trans. Manufacture"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:text="Trans. Manufacture" />
             <TextView
                 android:id="@+id/tvtransmanufacture"
+                android:textAlignment="center"
                 android:layout_width="200dp"
                 android:layout_height="35dp"
                 android:text="Trans. Manufacture"/>
@@ -181,14 +194,17 @@
             android:padding="8dp">
 
             <TextView
-                android:layout_width="100dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
+                android:textAlignment="center"
                 android:text="Serial Number"/>
+
             <TextView
                 android:id="@+id/tvserialnumber"
+                android:textAlignment="center"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:text="Serial Number"/>
+                android:text="Serial Number" />
 
 
         </LinearLayout>
@@ -199,16 +215,36 @@
             android:padding="8dp">
 
             <TextView
-                android:layout_width="100dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
+                android:textAlignment="center"
                 android:text="Remarks"/>
             <TextView
                 android:id="@+id/tvremark"
+                android:textAlignment="center"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:text="Remarks"/>
 
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/tvcource"
+                android:layout_width="match_parent"
+                android:layout_height="57dp"
+                android:text="Other Information"
+                android:textAlignment="center" />
+
+
+        </LinearLayout>
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -232,9 +268,10 @@
                     android:textColor="#FFF"
                     android:layout_margin="8dp"/>
             </androidx.cardview.widget.CardView>
+
             <View
-                android:layout_width="16dp"
-                android:layout_height="10dp"/>
+                android:layout_width="15dp"
+                android:layout_height="13dp" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/carddelete"

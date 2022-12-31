@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -30,12 +31,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.example.gis_2.db.DBHelper;
 import com.example.gis_2.modle.Gis;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.card.MaterialCardView;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -66,7 +69,15 @@ public class MainActivity extends AppCompatActivity {
     String arr1[]={"Trans. Capacity", "Null", "100 KVA", "250 KVA", "400 KVA", "630 KVA", "1000 KVA", "1600 KVA"};
     String arr2[]={"Trans. Condition", "Good", "Bad", "Damage"};
     String arr3[]={"Trans. Class", "Public", "Private"};
-    String arr4[]={"Trans. Manufacture", "ديالى", "وزيرية", "تركي", "سعودي", "لبناني", "يوغسلافي", "اماراتي", "ايراني"};
+    String arr4[]={"Trans. Manufacture", "ديالى", "وزيرية", "تركي", "سعودي", "لبناني", "يوغسلافي", "اماراتي","ايطالي","هندي","ايراني"};
+
+
+    MaterialCardView selectcard;
+    TextView tvcource;
+    boolean[] selectedcources;
+    ArrayList<Integer> courselist = new ArrayList<>();
+    String[] courceArray = {"جميع المفردات", "قاطع دورة مفرد", "قاطع دورة مزدوج", "قاطع دورة ثلاثي",
+            "قاطع دورة رباعي", "طقم لنك فيوز", " معدات ربط 0.4كف", "معدات ربط 11كف", "ارضي", "مانع صواعق"};
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,12 +122,11 @@ public class MainActivity extends AppCompatActivity {
         //up codes for adding the elements in the spinners
 
 
+
         ActivityCompat.requestPermissions(this, new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
-
-
 
 
         clearbtn.setOnClickListener(new View.OnClickListener() {
@@ -135,6 +145,23 @@ public class MainActivity extends AppCompatActivity {
 
                             db.deletedAll();
                             Toast.makeText(MainActivity.this, "Done", Toast.LENGTH_SHORT).show();
+                        feedered.setText("");
+                        subed.setText("");
+                        transided.setText("");
+                        gpsed.setText("");
+                        serialed.setText("");
+                        remarked.setText("");
+                        TransKva.setAdapter(TransKva.getAdapter());
+                        TransClass.setAdapter(TransClass.getAdapter());
+                        TransCondition.setAdapter(TransCondition.getAdapter());
+                        TransManufacture.setAdapter(TransManufacture.getAdapter());
+
+                        for (i = 0; i < selectedcources.length; i++) {
+                            selectedcources[i] = false;
+                            courselist.clear();
+                            tvcource.setText("Select the required information");
+                        }
+
 
                     }
                 });
@@ -167,8 +194,78 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // initialize all cardselection
+        selectcard = findViewById(R.id.selectcard);
+        tvcource = findViewById(R.id.tvcource);
+        selectedcources = new boolean[courceArray.length];
+
+        selectcard.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+                showcoursedailog();
+            }
+        });
+
         }
 
+    private void showcoursedailog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Select the required information");
+        builder.setCancelable(false);
+
+        builder.setMultiChoiceItems(courceArray, selectedcources, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                if (isChecked) {
+                    courselist.add(which);
+                } else {
+                    courselist.remove(which);
+
+                }
+            }
+        }).setPositiveButton("ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                //create string builder
+
+                StringBuilder stringbuilder = new StringBuilder();
+                for (int i = 0; i < courselist.size(); i++) {
+                    stringbuilder.append(courceArray[courselist.get(i)]);
+
+                    //check condition
+                    if (i != courselist.size() - 1) {
+                        // if i value not equal to course list value then add comma
+                        stringbuilder.append("-");
+                    }
+                    //setting the selected the information to textview
+                    tvcource.setText(stringbuilder.toString());
+
+                }
+
+            }
+        }).setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.dismiss();
+
+            }
+        }).setNeutralButton("clear all", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                //clearing all the selected information
+                for (int i = 0; i < selectedcources.length; i++) {
+                    selectedcources[i] = false;
+                    courselist.clear();
+                    tvcource.setText("Select the required information");
+                }
+            }
+        });
+        builder.show();
+    }
 
 
     public void buttonShareFile(View view){
@@ -225,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-        public void ShowAll (View view){
+    public void ShowAll (View view){
             startActivity(new Intent(MainActivity.this, GisListActivity.class));
         }
 
@@ -236,16 +333,14 @@ public class MainActivity extends AppCompatActivity {
             String transID = transided.getText().toString().trim();
             String gps = gpsed.getText().toString().trim();
 
-
             String transcapacity = TransKva.getSelectedItem().toString();
-
              String transclass = TransClass.getSelectedItem().toString();
              String transcondition = TransCondition.getSelectedItem().toString();
             String transmanufacture = TransManufacture.getSelectedItem().toString();
 
-
             String serialnumber = serialed.getText().toString().trim();
             String Remark = remarked.getText().toString().trim();
+            String information = tvcource.getText().toString().trim();
 
 
 
@@ -259,13 +354,14 @@ public class MainActivity extends AppCompatActivity {
 
                 // get date
                 @SuppressLint("SimpleDateFormat")
-                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH:MM");
                 Date date = new Date();
                 String f = formatter.format(date);
                 //
                 DBHelper dbHelper = new DBHelper(MainActivity.this);
 //                Gis g = new Gis(feedername, substationname, transID, gps, serialnumber, Remark,f);
-                dbHelper.addgis(new Gis(feedername,substationname,transID,gps,transcapacity,transclass,transcondition,transmanufacture ,serialnumber,Remark,f));
+                dbHelper.addgis(new Gis(feedername,substationname,transID,gps,transcapacity,transclass,transcondition,
+                        transmanufacture ,serialnumber,Remark,f, information));
                 Toast.makeText(this, f, Toast.LENGTH_SHORT).show();
             }
             feedered.setText("");
@@ -278,7 +374,11 @@ public class MainActivity extends AppCompatActivity {
             TransClass.setAdapter(TransClass.getAdapter());
             TransCondition.setAdapter(TransCondition.getAdapter());
             TransManufacture.setAdapter(TransManufacture.getAdapter());
-
+            for (int i = 0; i < selectedcources.length; i++) {
+                selectedcources[i] = false;
+                courselist.clear();
+                tvcource.setText("Select the required information");
+            }
         }
 
         
@@ -339,6 +439,8 @@ public class MainActivity extends AppCompatActivity {
             Arrays.toString(fw.getEncoding().getBytes(StandardCharsets.UTF_16));
 
             // to add the first row in the csv report
+            fw.append("Date");
+            fw.append(",");
             fw.append("Feeder_Name");
             fw.append(",");
             fw.append("Substation_Name");
@@ -347,17 +449,27 @@ public class MainActivity extends AppCompatActivity {
             fw.append(",");
             fw.append("GPS");
             fw.append(",");
+            fw.append("Capacity");
+            fw.append(",");
+            fw.append("Class");
+            fw.append(",");
+            fw.append("Condition");
+            fw.append(",");
+            fw.append("Manufacture");
+            fw.append(",");
             fw.append("Serial_Number");
             fw.append(",");
             fw.append("Remarks");
             fw.append(",");
-            fw.append("date");
+            fw.append("Other information");
             fw.append(",");
             fw.append("\n");
 
 
             for (int i = 0; i < recordArray.size(); i++) {
 
+                fw.append(recordArray.get(i).getDate());
+                fw.append(",");
                 fw.append(recordArray.get(i).getFeedername());
                 fw.append(",");
                 fw.append(recordArray.get(i).getSubstationname());
@@ -366,12 +478,6 @@ public class MainActivity extends AppCompatActivity {
                 fw.append(",");
                 fw.append(recordArray.get(i).getGps());
                 fw.append(",");
-                fw.append(recordArray.get(i).getSerialnumber());
-                fw.append(",");
-                fw.append(recordArray.get(i).getRemark());
-                fw.append(",");
-                fw.append(recordArray.get(i).getDate());
-                fw.append(",");
                 fw.append(recordArray.get(i).getCapacity());
                 fw.append(",");
                 fw.append(recordArray.get(i).getCondition());
@@ -379,6 +485,12 @@ public class MainActivity extends AppCompatActivity {
                 fw.append(recordArray.get(i).getClasses());
                 fw.append(",");
                 fw.append(recordArray.get(i).getManufacture());
+                fw.append(",");
+                fw.append(recordArray.get(i).getSerialnumber());
+                fw.append(",");
+                fw.append(recordArray.get(i).getRemark());
+                fw.append(",");
+                fw.append(recordArray.get(i).getInformation());
                 fw.append(",");
                 fw.append("\n");
             }
