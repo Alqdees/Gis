@@ -1,5 +1,6 @@
 package com.example.gis_2;
 
+import static android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -33,6 +34,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.gis_2.Map.GpsTracker;
 import com.example.gis_2.db.DBHelper;
 import com.example.gis_2.modle.Gis;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -53,7 +56,6 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String stringFile = Environment.getExternalStorageDirectory().getPath() + "/Gis/Gis_Report.csv";
 
 
     FusedLocationProviderClient fusedLocationProviderClient;
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private DBHelper db;
-    private static final int STORAGE_REQUEST_CODE_EXPORT = 1;
+    private static final int STORAGE_REQUEST_CODE_EXPORT = 100;
     private String[] storagePermissions;
     private Spinner TransKva, TransClass, TransCondition, TransManufacture;
     EditText feedered, subed, transided, gpsed, serialed, remarked;
@@ -71,21 +73,38 @@ public class MainActivity extends AppCompatActivity {
     String arr3[]={"Trans. Class", "Public", "Private"};
     String arr4[]={"Trans. Manufacture", "ديالى", "وزيرية", "تركي", "سعودي", "لبناني", "يوغسلافي", "اماراتي","ايطالي","هندي","ايراني"};
 
-
+    private GpsTracker tracker;
     MaterialCardView selectcard;
     TextView tvcource;
     boolean[] selectedcources;
-    ArrayList<Integer> courselist = new ArrayList<>();
+    ArrayList<Integer> courselist ;
     String[] courceArray = {"جميع المفردات", "قاطع دورة مفرد", "قاطع دورة مزدوج", "قاطع دورة ثلاثي",
             "قاطع دورة رباعي", "طقم لنك فيوز", " معدات ربط 0.4كف", "معدات ربط 11كف", "ارضي", "مانع صواعق"};
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        courselist = new ArrayList<>();
+
+
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+        builder.detectFileUriExposure();
+
+
+         tracker = new GpsTracker(this);
+
+
         db = new DBHelper(this);
-        storagePermissions = new String[]{WRITE_EXTERNAL_STORAGE
-                , READ_EXTERNAL_STORAGE};
+        storagePermissions = new String[]{
+                WRITE_EXTERNAL_STORAGE,
+                READ_EXTERNAL_STORAGE,
+                MANAGE_EXTERNAL_STORAGE};
+
+
+
         feedered = (EditText) findViewById(R.id.feedered);
         subed = (EditText) findViewById(R.id.subed);
         transided = (EditText) findViewById(R.id.transided);
@@ -98,8 +117,6 @@ public class MainActivity extends AppCompatActivity {
         exportbtn = findViewById(R.id.exportbtn);
         clearbtn = findViewById(R.id.clearbtn);
         sharebtn = findViewById(R.id.sharebtn);
-
-
 
 
         //making the spinners
@@ -121,13 +138,27 @@ public class MainActivity extends AppCompatActivity {
         TransManufacture.setAdapter(adapter4);
         //up codes for adding the elements in the spinners
 
+// initialize all cardselection
+        selectcard = findViewById(R.id.selectcard);
+        tvcource = findViewById(R.id.tvcource);
+        selectedcources = new boolean[courceArray.length ];
 
 
-        ActivityCompat.requestPermissions(this, new String[]{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
+//        ActivityCompat.requestPermissions(this,
+//        new String[]{READ_EXTERNAL_STORAGE,
+//        WRITE_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
 
-        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder.build());
 
+
+        gpsed.setOnClickListener(new View.OnClickListener() {@Override
+          public void onClick(View view) {
+           if (gpsed.equals("0.0,0.0")){
+              onResume();
+           }
+
+
+         }
+        });
 
         clearbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,7 +207,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // export to csv
         exportbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,20 +214,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        // code below to get the current location by click on the gps edittext
-        fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(this);
-        gpsed.setOnClickListener(new View.OnClickListener() {
+        sharebtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                getLastLocation();
+            public void onClick(View v) {
+               buttonShareFile();
+                // getDialog();
+
             }
         });
-
-        // initialize all cardselection
-        selectcard = findViewById(R.id.selectcard);
-        tvcource = findViewById(R.id.tvcource);
-        selectedcources = new boolean[courceArray.length];
 
         selectcard.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -209,6 +233,123 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+//    private void getDialog() {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        String options [] = {"Messenger","WhatsApp","Telegram", "Gmail"};
+//        builder.setTitle("Choose to Share");
+//        builder.setItems(options, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                if (i == 0) {
+//
+//                    getMessenger();
+//                }else if (i==1){
+//                    onClickWhatsapp();
+//
+//                }
+//                else if ( i == 2){
+//                    onClickTelegram();
+//
+//                }else if ( i == 3){
+//                    getGmail();
+//                }
+//            }
+//        }).create().show();
+//
+//    }
+//
+//    @SuppressLint("HardwareIds")
+//    private void getGmail() {
+//
+//        Uri uri = Uri.parse("Gmail://mail/u/0/?tab=rm&ogbl#inbox");
+//
+//        Intent toGmail= new Intent(Intent.ACTION_VIEW, uri);
+//
+//        try {
+//            startActivity(toGmail);
+//        }
+//        catch (android.content.ActivityNotFoundException ex)
+//        {
+//            Toast.makeText(getApplicationContext(), "Please Install Gmail",Toast.LENGTH_LONG).show();
+//        }
+//    }
+//
+//    @SuppressLint("HardwareIds")
+//    private void getMessenger() {
+//
+//        Uri uri = Uri.parse("fb-messenger://user/100002612665292");
+//
+//        Intent toMessenger= new Intent(Intent.ACTION_VIEW, uri);
+//
+//        try {
+//            startActivity(toMessenger);
+//        }
+//        catch (android.content.ActivityNotFoundException ex)
+//        {
+//            Toast.makeText(getApplicationContext(), "Please Install Facebook Messenger",Toast.LENGTH_LONG).show();
+//        }
+//    }
+//
+//    @SuppressLint({"IntentReset", "HardwareIds"})
+//    private void onClickTelegram() {
+//
+//        Uri uri = Uri.parse("https://t.me/Alqdees");
+//        Intent toTelegram= new Intent(Intent.ACTION_VIEW, uri);
+//        try {
+//            startActivity(toTelegram);
+//        }
+//        catch (android.content.ActivityNotFoundException ex)
+//        {
+//            Toast.makeText(getApplicationContext(), "Please Install Telegram",Toast.LENGTH_LONG).show();
+//        }
+//    }
+//
+//    @SuppressLint("HardwareIds")
+//    private void onClickWhatsapp() {
+//
+//        try {
+//            Intent waIntent = new Intent(Intent.ACTION_VIEW,Uri.parse("https://wa.me/9647812591236?text="+ deviceId));
+//            startActivity(waIntent);
+//        } catch (Exception e) {
+//            Toast.makeText(this, "WhatsApp not Installed", Toast.LENGTH_SHORT).show();
+//        }
+//
+//    }
+
+
+    public void buttonShareFile() {
+
+        String stringFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Gis/Gis_Report.csv";
+        File fileWithinMyDir = new File(stringFile);
+
+        if (fileWithinMyDir.exists()) {
+
+            Intent intentShareFile = new Intent();
+            intentShareFile.setAction(Intent.ACTION_SEND);
+            intentShareFile.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(fileWithinMyDir));
+            intentShareFile.setType("application/csv");
+            startActivity(intentShareFile);
+        } else {
+            Toast.makeText(this,
+                    Environment.getExternalStorageDirectory().getAbsolutePath() + "/not found",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+//        File file = new File(stringFile);
+//        if (!file.exists()){
+//            Toast.makeText(this, "File doesn't exists", Toast.LENGTH_LONG).show();
+//            return;
+//        }
+//        Intent intentShare = new Intent(Intent.ACTION_SEND);
+//        intentShare.setType("application/csv");
+//        intentShare.putExtra(Intent.EXTRA_STREAM, Uri.parse(stringFile));
+//        startActivity(Intent.createChooser(intentShare, "Share the file ..."));
+//
+
+    }
+
+
+
     private void showcoursedailog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle("Select the required information");
@@ -218,10 +359,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                 if (isChecked) {
-                    courselist.add(which);
-                } else {
-                    courselist.remove(which);
-
+                    if (!courselist.contains(which)){
+                        courselist.add(which);
+                    }
+                } else if (courselist.contains(which)){
+                     int a =courselist.get(which);
+                    courselist.remove(a);
                 }
             }
         }).setPositiveButton("ok", new DialogInterface.OnClickListener() {
@@ -268,52 +411,49 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void buttonShareFile(View view){
-        File file = new File(stringFile);
-        if (!file.exists()){
-            Toast.makeText(this, "File doesn't exists", Toast.LENGTH_LONG).show();
-            return;
-        }
-        Intent intentShare = new Intent(Intent.ACTION_SEND);
-        intentShare.setType("application/csv");
-        intentShare.putExtra(Intent.EXTRA_SUBJECT,"GIS Report");
-        intentShare.putExtra(Intent.EXTRA_TEXT,"Here I attached the GIS report.... With Thanks");
-        intentShare.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://"+file));
-        startActivity(Intent.createChooser(intentShare, "Share the file ..."));
+    @Override
+    protected void onResume() {
+        tracker.getLocation();
+        gpsed.setText("");
+        gpsed.setText(tracker.getLatitude()+" , "+tracker.getLongitude());
+        super.onResume();
+    }
 
-
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     private void getLastLocation() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-
-            fusedLocationProviderClient.getLastLocation()
-                    .addOnSuccessListener(new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            if (location !=null){
-                                Geocoder geocoder=new Geocoder(MainActivity.this, Locale.getDefault());
-                                List<Address> addresses= null;
-                                try {
-                                    addresses = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(),1);
-                                    gpsed.setText("Lagitude   :" +addresses.get(0).getLatitude() + " Longitude :"+addresses.get(0).getLongitude());
-
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
-
-                        }
-                    });
-
-
-        }else
-        {
-
-            askPermission();
-
-        }
+//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+//
+//            fusedLocationProviderClient.getLastLocation()
+//                    .addOnSuccessListener(new OnSuccessListener<Location>() {
+//                        @Override
+//                        public void onSuccess(Location location) {
+//                            if (location !=null){
+//                                Geocoder geocoder=new Geocoder(MainActivity.this, Locale.getDefault());
+//                                List<Address> addresses= null;
+//                                try {
+//                                    addresses = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(),1);
+//                                    gpsed.setText("Lagitude   :" +addresses.get(0).getLatitude() + " Longitude :"+addresses.get(0).getLongitude());
+//
+//                                } catch (IOException e) {
+//                                    e.printStackTrace();
+//                                }
+//
+//                            }
+//
+//                        }
+//                    });
+//
+//
+//        }else
+//        {
+//
+//            askPermission();
+//
+//        }
     }
 
     private void askPermission() {
@@ -362,7 +502,7 @@ public class MainActivity extends AppCompatActivity {
 //                Gis g = new Gis(feedername, substationname, transID, gps, serialnumber, Remark,f);
                 dbHelper.addgis(new Gis(feedername,substationname,transID,gps,transcapacity,transclass,transcondition,
                         transmanufacture ,serialnumber,Remark,f, information));
-                Toast.makeText(this, f, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"saved" +"/"+ f, Toast.LENGTH_SHORT).show();
             }
             feedered.setText("");
             subed.setText("");
@@ -389,8 +529,8 @@ public class MainActivity extends AppCompatActivity {
 //            requestStoragePermissionExport();
             exportCSV();
         } else {
-
             requestStoragePermissionExport();
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
                     false == Environment.isExternalStorageManager()) {
                 Uri uri = Uri.parse("package:" + BuildConfig.APPLICATION_ID);
@@ -400,25 +540,25 @@ public class MainActivity extends AppCompatActivity {
                 Uri uri = Uri.parse("package:" + BuildConfig.APPLICATION_ID);
                 startActivity(new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri));
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S_V2 &&
-                    !Environment.isExternalStorageManager()) {
+                    false == Environment.isExternalStorageManager()) {
                 Uri uri = Uri.parse("package:" + BuildConfig.APPLICATION_ID);
                 startActivity(new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri));
             }
+
         }
     }
     private void requestStoragePermissionExport() {
-
+//        ActivityCompat.requestPermissions(this, storagePermissions, STORAGE_REQUEST_CODE_IMPORT);
         ActivityCompat.requestPermissions(this, storagePermissions, STORAGE_REQUEST_CODE_EXPORT);
     }
 
 
 
     private boolean checkStoragePermission() {
-        boolean result = ContextCompat.checkSelfPermission(this,
+        return ContextCompat.checkSelfPermission(this,
                 WRITE_EXTERNAL_STORAGE) ==
                 (PackageManager.PERMISSION_GRANTED);
 
-        return result;
     }
     private void exportCSV() {
 
@@ -515,7 +655,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("GRANTED" ,  e.getMessage());
                     }
                 } else {
-                    Toast.makeText(this, "نحتاج صلاحيات للذاكرة", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, grantResults.length +"_" +grantResults[0], Toast.LENGTH_LONG).show();
                 }
             }
             break;

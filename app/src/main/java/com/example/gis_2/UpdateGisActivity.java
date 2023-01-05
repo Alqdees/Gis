@@ -14,6 +14,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.gis_2.Map.GpsTracker;
 import com.example.gis_2.db.DBHelper;
 import com.example.gis_2.modle.Gis;
 import com.google.android.material.card.MaterialCardView;
@@ -42,6 +43,8 @@ public class UpdateGisActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_gis);
+
+        GpsTracker tracker = new GpsTracker(this);
 
        Gis g = (Gis) getIntent().getExtras().getSerializable("GIS");
 
@@ -96,7 +99,7 @@ public class UpdateGisActivity extends AppCompatActivity {
                         if (isChecked) {
                             courselist.add(which);
                         } else {
-                            courselist.remove(which);
+                           // courselist.remove(which);
                         }
                     }
                 }).setPositiveButton("ok", new DialogInterface.OnClickListener() {
@@ -146,6 +149,16 @@ public class UpdateGisActivity extends AppCompatActivity {
         });
 
 
+
+        gpsed.setOnClickListener(new View.OnClickListener() {@Override
+        public void onClick(View view) {
+            gpsed.setText(tracker.getLatitude()+" , "+tracker.getLongitude());
+
+        }
+        });
+
+
+
         feedered.setText(g.getFeedername());
         subed.setText(g.getSubstationname());
         transided.setText(g.getTransID());
@@ -156,7 +169,7 @@ public class UpdateGisActivity extends AppCompatActivity {
         TransClass.setSelection(getpostion2(g.getClasses()));
         TransCondition.setSelection(getpostion3(g.getCondition()));
         TransManufacture.setSelection(getpostion4(g.getManufacture()));
-//        tvcource.setText(g.getInformation());
+         tvcource.setText(g.getInformation());
 
 
 

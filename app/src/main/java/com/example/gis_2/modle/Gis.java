@@ -29,7 +29,9 @@ public class Gis implements Serializable {
         this.classes = classes;
         this.manufacture = manufacture;
         this.serialnumber = serialnumber;
+        this.information = information;
         Remark = remark;
+
     }
 
     public Gis(int id, String feedername, String substationname, String transID, String gps,
